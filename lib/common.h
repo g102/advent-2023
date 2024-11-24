@@ -6,6 +6,7 @@
 #include <vector>
 
 std::string readall(std::ifstream& file);
+std::ifstream parse_args(int argc, char** argv);
 std::vector<std::string> split(std::string& input, std::string_view sep);
 
 #endif
