@@ -8,31 +8,31 @@
 
 class Map {
    public:
-	std::string map;
+	std::string data;
 	size_t rows, cols;
 
 	Map(std::string);
+	Map transpose();
+	void print();
 
-	auto begin() { return map.begin(); }
-	auto rbegin() { return map.rbegin(); }
-	auto end() { return map.end(); }
-	auto rend() { return map.rend(); }
+	auto begin() { return data.begin(); }
+	auto rbegin() { return data.rbegin(); }
+	auto end() { return data.end(); }
+	auto rend() { return data.rend(); }
 
 	auto row(size_t ix) {
-		return map | std::views::drop(ix * cols) | std::views::take(cols);
+		return data | std::views::drop(ix * cols) | std::views::take(cols);
 	}
 	auto col(size_t ix) {
-		return map | std::views::drop(ix) | std::views::stride(cols);
+		return data | std::views::drop(ix) | std::views::stride(cols);
 	}
 
 	std::vector<size_t> ix2sub(size_t ix) { return {ix / cols, ix % cols}; }
 	size_t sub2ix(std::vector<size_t> sub) { return sub[0] * cols + sub[1]; }
 
-	auto& operator[](size_t ix) { return map[ix]; };
-	auto& operator()(size_t ir, size_t ic) { return map[sub2ix({ir, ic})]; }
+	auto& operator[](size_t ix) { return data[ix]; };
+	auto& operator()(size_t ir, size_t ic) { return data[sub2ix({ir, ic})]; }
 
-	Map transpose();
-	void print();
 };
 
 #endif

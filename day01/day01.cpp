@@ -17,17 +17,10 @@ int parse_digits(std::string_view line) {
 	return i0 * 10 + i1;
 }
 
-bool startswith(std::string_view a, std::string_view b) {
-	if (a.length() < b.length()) {
-		return false;
-	}
-	return a.substr(0, b.length()) == b;
-}
-
 void replace_dict(std::string& line) {
 	for (size_t i = 0; i < line.length(); i++) {
 		for (size_t j = 0; j < dict.size(); j++) {
-			if (startswith(line.substr(i), dict[j])) {
+			if (line.substr(i).starts_with(dict[j])) {
 				line.replace(i, 1, std::string(1, (char)(j + '0')));
 			}
 		}
@@ -35,12 +28,7 @@ void replace_dict(std::string& line) {
 }
 
 int main(int argc, char** argv) {
-	std::ifstream input;
-	if (argc > 1) {
-		input.open(argv[1]);
-	} else {
-		input.open("test-pt2.txt");
-	}
+	std::ifstream input(argc > 1 ? argv[1] : "test-pt2.txt");
 
 	long ctr_pt1{0}, ctr_pt2{0};
 	for (std::string line; getline(input, line);) {
@@ -49,7 +37,7 @@ int main(int argc, char** argv) {
 		ctr_pt2 += parse_digits(line);
 	}
 	input.close();
-	
+
 	std::cout << ctr_pt1 << std::endl;
 	std::cout << ctr_pt2 << std::endl;
 }

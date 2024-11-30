@@ -1,42 +1,26 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
-#include <print>
 #include <numeric>
-#include <sstream>
+#include <print>
 #include <vector>
 
 #include "../lib/common.h"
 
 typedef std::vector<int> vec;
 
-vec string_to_vec(std::string& s) {
-	vec out;
-	int temp;
-	std::stringstream ss{s};
-
-	while (ss >> temp) {
-		out.push_back(temp);
-	}
-
-	return out;
-}
-
 struct Card {
 	int card_id, n_winners, points, instances{1};
 	vec lotto_numbers, winning_numbers;
 
 	Card(std::string_view line) {
-		std::string_view::iterator it[4];
-		it[0] = std::string_view::iterator{&line[3]};
-		it[1] = std::ranges::find(line, ':');
-		it[2] = std::ranges::find(line, '|');
-		it[3] = line.end();
+		std::vector<size_t> it{5, line.find(':') + 1, line.find('|') + 1,
+		                       line.npos};
 
 		std::vector<vec> contents;
-		for (size_t ix = 0; ix < 3; ix++) {
-			std::string temp{it[ix] + 1, it[ix + 1]};
-			contents.push_back(string_to_vec(temp));
+		for (size_t ix = 0; ix < it.size() - 1; ix++) {
+			std::string subs{line.substr(it[ix], it[ix + 1] - it[ix])};
+			contents.push_back(string_to_vec<int>(subs));
 		}
 
 		card_id = contents[0][0];
@@ -61,7 +45,7 @@ struct Card {
 };
 
 int main(int argc, char** argv) {
-	std::ifstream input = parse_args(argc, argv);
+	std::ifstream input(argc > 1 ? argv[1] : "test.txt");
 
 	std::vector<Card> cards;
 
@@ -76,7 +60,8 @@ int main(int argc, char** argv) {
 	}
 
 	vec instances, points;
-	std::ranges::transform(cards, std::back_inserter(instances), &Card::instances);
+	std::ranges::transform(cards, std::back_inserter(instances),
+	                       &Card::instances);
 	std::ranges::transform(cards, std::back_inserter(points), &Card::points);
 
 	auto answer_pt1 = std::accumulate(points.begin(), points.end(), 0);

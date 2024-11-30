@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 	input.close();
 
 	std::vector<std::string> states;
-	states.push_back(m.map);
+	states.push_back(m.data);
 
 	// part 1:
 	roll(m, 'n');
@@ -83,22 +83,22 @@ int main(int argc, char** argv) {
 	roll(m, 'w');
 	roll(m, 's');
 	roll(m, 'e');
-	states.push_back(m.map);
+	states.push_back(m.data);
 
 	// part 2: solve here
 	long n{1000000000};
 	while (true) {
 		cycle(m);
-		auto iter = std::ranges::find(states, m.map);
+		auto iter = std::ranges::find(states, m.data);
 		if (iter != states.end()) {
 			// we found a repeat, end it there
 			auto period = std::distance(iter, states.end());
 			auto start = std::distance(states.begin(), iter);
 			auto delta = (n - start) % period;
-			m.map = *(iter + delta);
+			m.data = *(iter + delta);
 			std::cout << weight_on_north(m) << std::endl;
 			break;
 		}
-		states.push_back(m.map);
+		states.push_back(m.data);
 	}
 }

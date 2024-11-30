@@ -5,27 +5,25 @@
 #include <string>
 #include <vector>
 
-#include "../Map.cpp"
-#include "../common.h"
+#include "../lib/Map.h"
+#include "../lib/common.h"
 
 int diff(std::ranges::range auto r1, std::ranges::range auto r2) {
 	if (std::ranges::equal(r1, r2)) return 0;
-	
+
 	int ctr{0};
-	for (auto item : std::views::zip(r1, r2)) {
+	for (auto item : std::views::zip(r1, r2))
 		ctr += std::get<0>(item) != std::get<1>(item);
-	}
 	return ctr;
 }
 
 bool check_symm(Map& m, size_t ix, int must_have_changes = 0) {
-	if (ix == 0 || ix == m.rows) {
+	if (ix == 0 || ix == m.rows)
 		return false;
-	}
 
 	auto N = ix > (m.rows / 2) ? m.rows - ix : ix;
 	auto cumulative_diff{0};
-	for (auto i = 0; i < N; i++) {
+	for (size_t i = 0; i < N; i++) {
 		cumulative_diff += diff(m.row(ix + i), m.row(ix - (i + 1)));
 		if (cumulative_diff > must_have_changes) {
 			return false;
@@ -51,17 +49,12 @@ int get_score(Map& m, int must_have_changes = 0) {
 		}
 	}
 	m = m.transpose();
-	
+
 	return score;
 }
 
 int main(int argc, char** argv) {
-	std::ifstream input;
-	if (argc > 1) {
-		input.open(argv[1]);
-	} else {
-		input.open("test.txt");
-	}
+	std::ifstream input{argc > 1 ? argv[1] : "test.txt"};
 
 	std::string in_str = readall(input);
 	auto split_str = split(in_str, "\n\n");

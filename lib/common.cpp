@@ -7,14 +7,6 @@ std::string readall(std::ifstream& file) {
 	return ss.str();
 }
 
-std::ifstream parse_args(int argc, char** argv) {
-	if (argc > 1) {
-		return std::ifstream{argv[1]};
-	} else {
-		return std::ifstream{"test.txt"};
-	}
-}
-
 std::vector<std::string> split(std::string& input, std::string_view sep) {
 	std::vector<std::string> out;
 	size_t it = 0;

@@ -7,16 +7,7 @@
 #include <string>
 #include <vector>
 
-template <typename T>
-std::vector<T> parse_line(std::string& line) {
-	std::vector<T> x;
-	std::stringstream ssline{line};
-	T temp;
-	while (ssline >> temp) {
-		x.push_back(temp);
-	}
-	return x;
-}
+#include "../lib/common.h"
 
 bool all_same(std::vector<long> a) {
 	using namespace std::ranges;
@@ -47,16 +38,11 @@ std::vector<long> next_item(std::ranges::range auto a) {
 }
 
 int main(int argc, char** argv) {
-	std::ifstream input;
-	if (argc > 1) {
-		input.open(argv[1]);
-	} else {
-		input.open("test.txt");
-	}
+	std::ifstream input(argc > 1 ? argv[1] : "test.txt");
 
 	long ctr_part1{0}, ctr_part2{0};
 	for (std::string line; getline(input, line);) {
-		auto parsed = parse_line<long>(line);
+		auto parsed = string_to_vec<long>(line);
 		auto solution = next_item(parsed);
 		ctr_part1 += solution[solution.size() - 1];
 		ctr_part2 += solution[0];
